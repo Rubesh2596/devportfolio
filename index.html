@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rubesh - Developer Portfolio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        :root {
+            --bg-color: #1A1A2E; /* Dark background */
+            --primary-color: #2D2D44; /* Slightly lighter dark for cards/sections */
+            --accent-color: #2563EB; /* Blue accent */
+            --accent-hover-color: #10B981; /* Green hover accent */
+            --secondary-accent-color: #F59E0B; /* Orange secondary accent */
+            --text-color: #E0E0E0; /* Light text for dark background */
+            --text-secondary-color: #B0B0B0; /* Slightly darker light text */
+            --header-bg-color: rgba(26, 26, 46, 0.9); /* Dark header with transparency */
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            /* Background pattern styles */
+            background-image: url('data:image/svg+xml;utf8,<svg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><circle cx="25" cy="25" r="2" fill="%232D2D44"/><circle cx="75" cy="75" r="2" fill="%232D2D44"/><path d="M50 0 L50 100" stroke="%232D2D44" stroke-width="0.5" stroke-dasharray="1 5"/><path d="M0 50 L100 50" stroke="%232D2D44" stroke-width="0.5" stroke-dasharray="1 5"/></svg>');
+            background-size: 100px 100px; /* Adjust size of pattern repeats */
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #2D2D44; /* Darker track */
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #4A4A60; /* Darker thumb */
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #60607A; /* Even darker thumb on hover */
+        }
+        /* Section animations */
+        .section-hidden {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .section-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        /* Nav link styling */
+        .nav-link {
+            position: relative;
+            transition: color 0.3s ease;
+            color: var(--text-secondary-color);
+        }
+        .nav-link.active, .nav-link:hover {
+            color: var(--accent-color);
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            left: 50%;
+            background-color: var(--accent-color);
+            transition: all 0.3s ease-in-out;
+            transform: translateX(-50%);
+        }
+        .nav-link.active::after, .nav-link:hover::after {
+            width: 100%;
+        }
+        .nav-button {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--accent-color);
+            color: var(--accent-color);
+            border-radius: 0.375rem;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        .nav-button:hover {
+            background-color: var(--accent-color);
+            color: var(--bg-color);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(37, 99, 235, 0.2);
+        }
+        /* Card styles */
+        .custom-card {
+            width: 100%;
+            max-width: 22em;
+            background: var(--primary-color);
+            transition: all .4s ease-in-out;
+            clip-path: polygon(30px 0%, 100% 0, 100% calc(100% - 30px), calc(100% - 30px) 100%, 0 100%, 0% 30px);
+            border-top-right-radius: 20px;
+            border-bottom-left-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            padding: 1.5rem;
+            border: 1px solid #4A4A60; /* Darker border for contrast */
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.08);
+        }
+        .custom-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.15), 0 4px 6px -2px rgba(0, 0, 0, 0.1);
+        }
+        .custom-card span {
+            font-weight: bold;
+            color: var(--text-color);
+            text-align: center;
+            display: block;
+            font-size: 1.25em;
+            margin-top: 1em;
+        }
+        .custom-card .info {
+            font-weight: 400;
+            color: var(--text-secondary-color);
+            display: block;
+            text-align: center;
+            font-size: 0.9em;
+            margin: 1em 0;
+            flex-grow: 1;
+        }
+        .custom-card .img {
+            width: 6em;
+            height: 6em;
+            background-color: #4A4A60; /* Darker placeholder */
+            border-radius: 15px;
+            margin: auto;
+            background-size: cover;
+            background-position: center;
+        }
+        .custom-card .share {
+            margin-top: 1em;
+            display: flex;
+            justify-content: center;
+            gap: 1.5em;
+        }
+        .custom-card .share a {
+            color: var(--text-secondary-color);
+            transition: all .4s ease-in-out;
+        }
+        .custom-card .share a:hover {
+            color: var(--accent-color);
+            transform: translateY(-2px);
+        }
+        .custom-card button {
+            padding: 0.8em 1.7em;
+            display: block;
+            margin: 1.5em auto 0;
+            border-radius: 25px;
+            border: none;
+            font-weight: bold;
+            background: var(--accent-color);
+            color: var(--bg-color);
+            transition: all .4s ease-in-out;
+        }
+        .custom-card button:hover {
+            background: var(--accent-hover-color);
+            cursor: pointer;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        /* Project card */
+        .project-card {
+            max-width: none;
+        }
+        .project-card .img {
+            width: 100%;
+            height: 10em;
+            border-radius: 10px;
+            margin: 0 0 1em 0;
+        }
+        .project-card .tags {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        .project-card .tags span {
+            background-color: rgba(37, 99, 235, 0.2); /* Slightly transparent accent */
+            color: var(--accent-color);
+            padding: 0.25rem 0.75rem;
+            border-radius: 15px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            margin-top: 0;
+        }
+        /* Interactive button */
+        .interactive-button {
+            transition: all 0.3s ease;
+        }
+        .interactive-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(37, 99, 235, 0.15);
+            background-color: var(--accent-color);
+            color: var(--bg-color);
+        }
+        /* Override Vanta.js if it was still active */
+        #vanta-bg {
+            display: none; 
+        }
+
+        /* Adjust colors for skills icons on dark background */
+        .fa-html5 { color: #E44D26 !important; }
+        .fa-css3-alt { color: #264DE4 !important; }
+        .fa-js-square { color: #F7DF1E !important; }
+        .fa-react { color: #61DAFB !important; }
+        .fa-node-js { color: #6DA55F !important; }
+        .fa-file-code { color: #38BDF8 !important; } /* Tailwind CSS */
+        .fa-code { color: #E0E0E0 !important; } /* Next.js/C */
+        .fa-database { color: #4CAF50 !important; } /* MongoDB */
+        .fa-python { color: #FFD43B !important; }
+        .fa-java { color: #ED8B00 !important; }
+        .fa-bolt { color: #3ECF8E !important; } /* Supabase */
+        .fa-git-alt { color: #F05032 !important; }
+
+        /* Styles for the illustrative elements in the hero section */
+        .hero-illustration {
+            position: absolute;
+            bottom: 0;
+            right: 10%; /* Adjust position as needed */
+            width: 350px; /* Max width for the illustration */
+            height: 350px;
+            max-width: 40%; /* Responsive sizing */
+            max-height: 40%;
+            z-index: 5; /* Ensure it's above the background pattern but below text */
+            pointer-events: none; /* Allows clicks to pass through */
+            background-image: url('https://i.imgur.com/e2Zf4gS.png'); /* Replace with your desired illustration or similar graphic */
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: bottom right;
+        }
+
+        @media (max-width: 768px) {
+            .hero-illustration {
+                position: relative; /* Position relative on smaller screens */
+                margin: 2rem auto 0; /* Center it below text */
+                right: auto;
+                width: 250px;
+                height: 250px;
+            }
+        }
+        .skill-card {
+  background: var(--bg-color); /* White background for the card */
+  transition: all 0.4s ease-in-out;
+  clip-path: polygon(20px 0%, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%, 0% 20px); /* Smaller clip path */
+  border-top-right-radius: 15px; /* Smaller radius */
+  border-bottom-left-radius: 15px; /* Smaller radius */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 1.5rem; /* Reduced padding */
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  aspect-ratio: 4 / 3; /* Slightly less square, adjust as needed */
+  text-align: center; /* Ensure text is centered */
+}
+
+.skill-card:hover {
+  transform: translateY(-5px) scale(1.03); /* Reduced hover scale */
+  box-shadow: 0 10px 20px -8px rgba(37, 99, 235, 0.2); /* Reduced hover shadow */
+  cursor: pointer;
+}
+  .project-card:hover h3 {
+        color: var(--accent-color);
+    }
+    .project-card .share a {
+        transition: color 0.3s ease, transform 0.3s ease;
+    }
+    .project-card .share a:hover {
+        color: var(--accent-color);
+        transform: scale(1.1);
+    }
+    </style>
+</head>
+<body class="antialiased">
+
+    <header id="header" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300" style="background-color: var(--header-bg-color);">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex justify-between items-center">
+                <a href="#home" class="text-3xl font-extrabold tracking-wide text-blue-600 hover:text-blue-800 transition-colors duration-300 ease-in-out">
+                    Rubesh
+                </a>
+                <nav class="hidden md:flex items-center space-x-8">
+                    <a href="#about" class="nav-link text-lg">About</a>
+                    <a href="#skills" class="nav-link text-lg">Skills</a>
+                    <a href="#projects" class="nav-link text-lg">Projects</a>
+                    <a href="#contact" class="nav-link text-lg">Contact</a>
+                    <a href="./assets/RUBESHRESUME NEW.pdf" download class="nav-button text-lg">Resume</a>
+                </nav>
+                <button id="mobile-menu-button" class="md:hidden focus:outline-none" style="color: var(--text-secondary-color);">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                </button>
+            </div>
+        </div>
+        <div id="mobile-menu" class="hidden md:hidden" style="background-color: var(--primary-color);">
+            <a href="#about" class="block py-2 px-6 hover:bg-gray-700" style="color: var(--text-secondary-color);">About</a>
+            <a href="#skills" class="block py-2 px-6 hover:bg-gray-700" style="color: var(--text-secondary-color);">Skills</a>
+            <a href="#projects" class="block py-2 px-6 hover:bg-gray-700" style="color: var(--text-secondary-color);">Projects</a>
+            <a href="#contact" class="block py-2 px-6 hover:bg-gray-700" style="color: var(--text-secondary-color);">Contact</a>
+           <div class="p-4">
+ <a href="./assets/RUBESHRESUME NEW.pdf" download
+   class="block text-center py-2 px-6 rounded-md 
+          text-[var(--accent-color)] border border-[var(--accent-color)] 
+          hover:bg-[var(--accent-color)] hover:text-white 
+          transition duration-300">
+   Resume
+</a>
+
+</div>
+
+
+        </div>
+    </header>
+
+    <main class="container mx-auto px-6 md:px-12 lg:px-24">
+
+        <section id="hero" class="min-h-screen flex flex-col justify-center section-hidden relative overflow-hidden">
+            <div class="relative z-10">
+                <h1 class="text-4xl sm:text-6xl md:text-7xl font-bold" style="color: var(--text-color);">Hey, I’m Rubesh.</h1>
+                <h2 class="text-4xl sm:text-6xl md:text-7xl font-bold mt-2" style="color: var(--text-secondary-color);">I'm a Full Stack Developer & UI/UX Designer.</h2>
+                <p class="mt-6 max-w-xl text-lg" style="color: var(--text-secondary-color);">
+                    I design and develop responsive websites & apps with a focus on clean code, performance, and user experience.
+                </p>
+                <div class="mt-8">
+                    <a href="#projects" class="interactive-button inline-block px-8 py-4 border rounded-md font-medium text-[var(--accent-color)] border-[var(--accent-color)] hover:bg-blue-700 hover:text-white transition duration-300">
+                        Check out my work!
+                    </a>
+                </div>
+                <div class="mt-12 flex space-x-6">
+                    <a href="https://www.linkedin.com/in/rubesh-s-8400112a5/" target="_blank" rel="noopener noreferrer" class="text-2xl text-gray-400 hover:text-white transition-colors duration-300"><i class="fab fa-linkedin"></i></a>
+                    <a href="https://github.com/Rubesh2596" target="_blank" rel="noopener noreferrer" class="text-2xl text-gray-400 hover:text-white transition-colors duration-300"><i class="fab fa-github"></i></a>
+                    <a href="mailto:rubeshsankar2006@gmail.com" 
+   class="text-2xl text-gray-400 hover:text-white transition-colors duration-300">
+   <i class="fas fa-envelope"></i>
+</a>
+
+                </div>
+            </div>
+            <div class="hero-illustration"></div>
+        </section>
+
+
+     <section id="about" class="py-24 md:py-32 section-hidden">
+    <h2 class="text-3xl font-bold mb-12 relative text-center" style="color: var(--text-color);">
+        <span style="color: var(--accent-color);" class="mr-2"></span> About Me
+    </h2>
+    <div class="container mx-auto px-6 max-w-5xl">
+        
+        <div class="flex flex-col md:flex-row items-center gap-12 p-8 rounded-lg shadow-lg" style="background-color: var(--primary-color);">
+            
+            <div class="flex-shrink-0">
+                <div class="w-48 h-48 rounded-full shadow-lg bg-cover bg-center" style="background-image: url('https://placehold.co/400x400/111827/E0E0E0?text=R')">
+                </div>
+            </div>
+
+            <div class="flex-grow text-center md:text-left">
+                <h3 class="text-3xl font-bold mb-2" style="color: var(--text-color);">My Journey into Web Development</h3>
+                <p class="info text-lg leading-relaxed" style="color: var(--text-secondary-color);">
+                    My journey began with a fascination for HTML tags and the magic of styling them. This initial curiosity quickly blossomed into a deep interest in web development. I eagerly dove into frontend technologies, crafting engaging user interfaces, and am now enthusiastically exploring the complexities of backend development. I'm excited to build full-stack solutions and continue pushing the boundaries of what's possible in the digital world.
+                </p>
+                <div class="share mt-6 flex justify-center md:justify-start space-x-6 items-center">
+                    <a href="https://github.com/Rubesh2596" target="_blank" rel="noopener noreferrer" class="text-2xl transform hover:scale-110 transition-transform duration-300"><i class="fab fa-github"></i></a>
+                    <a href="https://www.linkedin.com/in/rubesh-s-8400112a5/" target="_blank" rel="noopener noreferrer" class="text-2xl transform hover:scale-110 transition-transform duration-300"><i class="fab fa-linkedin"></i></a>
+                    <a href="./assets/RUBESHRESUME NEW.pdf" target="_blank" 
+   class="ml-4 px-6 py-2 border rounded-md font-medium 
+          text-[var(--accent-color)] border-[var(--accent-color)] 
+          hover:bg-blue-600 hover:text-white transition-all duration-300">
+   View Resume
+</a>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12 text-center">
+            
+            <div class="p-6 rounded-lg shadow-md transform hover:-translate-y-2 transition-transform duration-300" style="background-color: var(--primary-color);">
+                <i class="fas fa-code text-4xl mb-4" style="color: var(--accent-color);"></i>
+                <p class="text-4xl font-bold mb-2" style="color: var(--text-color);">2+</p>
+                <p class="text-[var(--text-secondary-color)]">Years Experience</p>
+            </div>
+
+            <div class="p-6 rounded-lg shadow-md transform hover:-translate-y-2 transition-transform duration-300" style="background-color: var(--primary-color);">
+                <i class="fas fa-project-diagram text-4xl mb-4" style="color: var(--accent-color);"></i>
+                <p class="text-4xl font-bold mb-2" style="color: var(--text-color);">10+</p>
+                <p class="text-[var(--text-secondary-color)]">Projects Completed</p>
+            </div>
+
+            <div class="p-6 rounded-lg shadow-md transform hover:-translate-y-2 transition-transform duration-300" style="background-color: var(--primary-color);">
+                <i class="fas fa-graduation-cap text-4xl mb-4" style="color: var(--accent-color);"></i>
+                <p class="text-4xl font-bold mb-2" style="color: var(--text-color);">5+</p>
+                <p class="text-[var(--text-secondary-color)]">Technologies Mastered</p>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+       <section id="skills" class="py-24" style="background-color: var(--primary-color);">
+    <h2 class="text-3xl font-bold mb-16 relative text-center" style="color: var(--text-color);">
+        <span style="color: var(--accent-color);" class="mr-2"></span> My Tech Stack
+    </h2>
+    <div class="container mx-auto px-6">
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
+            
+            <div class="skill-card">
+                <i class="fa-brands fa-html5 text-4xl mb-3" style="color: var(--accent-color);"></i>
+                <span class="font-medium" style="color: var(--text-secondary-color);">HTML5</span>
+            </div>
+
+            <div class="skill-card">
+                <i class="fa-brands fa-css3-alt text-4xl mb-3" style="color: var(--accent-color);"></i>
+                <span class="font-medium" style="color: var(--text-secondary-color);">CSS3</span>
+            </div>
+
+            <div class="skill-card">
+                <i class="fa-brands fa-js-square text-4xl mb-3" style="color: var(--accent-color);"></i>
+                <span class="font-medium" style="color: var(--text-secondary-color);">JavaScript</span>
+            </div>
+
+            <div class="skill-card">
+                <i class="fa-brands fa-react text-4xl mb-3" style="color: var(--accent-color);"></i>
+                <span class="font-medium" style="color: var(--text-secondary-color);">React</span>
+            </div>
+
+            <div class="skill-card">
+                <i class="fa-brands fa-node-js text-4xl mb-3" style="color: var(--accent-color);"></i>
+                <span class="font-medium" style="color: var(--text-secondary-color);">Node.js</span>
+            </div>
+
+            <div class="skill-card">
+                <i class="fa-solid fa-file-code text-4xl mb-3" style="color: var(--accent-color);"></i>
+                <span class="font-medium" style="color: var(--text-secondary-color);">Tailwind CSS</span>
+            </div>
+
+            <div class="skill-card">
+                <i class="fa-solid fa-code text-4xl mb-3" style="color: var(--accent-color);"></i>
+                <span class="font-medium" style="color: var(--text-secondary-color);">Next.js</span>
+            </div>
+
+            <div class="skill-card">
+                <i class="fa-solid fa-database text-4xl mb-3" style="color: var(--accent-color);"></i>
+                <span class="font-medium" style="color: var(--text-secondary-color);">MongoDB</span>
+            </div>
+
+            <div class="skill-card">
+                <i class="fa-brands fa-python text-4xl mb-3" style="color: var(--accent-color);"></i>
+                <span class="font-medium" style="color: var(--text-secondary-color);">Python</span>
+            </div>
+            
+            <div class="skill-card">
+                <i class="fa-brands fa-git-alt text-4xl mb-3" style="color: var(--accent-color);"></i>
+                <span class="font-medium" style="color: var(--text-secondary-color);">Git</span>
+            </div>
+            
+        </div>
+    </div>
+</section>
+
+       
+<section id="projects" class="py-24" style="background-color: var(--bg-color);">
+    <h2 class="text-3xl font-bold mb-16 relative text-center" style="color: var(--text-color);">
+        <span style="color: var(--accent-color);" class="mr-2"></span> Some Things I’ve Built
+    </h2>
+    <div class="container mx-auto px-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+            
+            <div class="custom-card project-card transform hover:-translate-y-2 transition-transform duration-300">
+             <div class="img w-full h-64 bg-cover bg-center" 
+     style="background-image: url('https://placehold.co/600x400/F9FAFB/2563EB?text=Movie+App'); 
+            opacity: 0.5;">
+</div>
+
+
+                <h3 class="text-xl font-bold my-4 transition-colors duration-300">Movie Application</h3>
+                <div class="tags">
+                    <span>React</span><span>REST API</span><span>Tailwind</span>
+                </div>
+                <p class="info">A responsive web app to browse, search, and view movie details using a third-party API. Features pagination and genre filtering.</p>
+                <div class="share">
+                    <a href="#" target="_blank" rel="noopener noreferrer" aria-label="Movie App GitHub Repository"><i class="fab fa-github fa-lg"></i></a>
+                    <a href="https://rubeshdevmovie.netlify.app/" target="_blank" rel="noopener noreferrer" aria-label="Movie App Live Demo"><i class="fa-solid fa-arrow-up-right-from-square fa-lg"></i></a>
+                </div>
+            </div>
+
+            <div class="custom-card project-card transform hover:-translate-y-2 transition-transform duration-300">
+                <div class="img w-full h-64 bg-cover bg-center" 
+     style="background-image: url('https://placehold.co/600x400/F9FAFB/2563EB?text=Course+App'); 
+            opacity: 0.5;">
+</div>
+
+                <h3 class="text-xl font-bold my-4 transition-colors duration-300">Course Registration App</h3>
+                <div class="tags">
+                    <span>HTML</span><span>CSS</span><span>JavaScript</span>
+                </div>
+                <p class="info">A web portal for students to register for courses, featuring user authentication, a course catalog, and a student dashboard.</p>
+                <div class="share">
+                    <a href="#" target="_blank" rel="noopener noreferrer" aria-label="Course App GitHub Repository"><i class="fab fa-github fa-lg"></i></a>
+                    <a href="https://lambent-paletas-72aa33.netlify.app/" target="_blank" rel="noopener noreferrer" aria-label="Course App Live Demo"><i class="fa-solid fa-arrow-up-right-from-square fa-lg"></i></a>
+                </div>
+            </div>
+
+            <div class="custom-card project-card transform hover:-translate-y-2 transition-transform duration-300">
+                <div class="img w-full h-64 bg-cover bg-center" 
+     style="background-image: url('https://placehold.co/600x400/F9FAFB/2563EB?text=React+Portfolio'); 
+            opacity: 0.5;">
+</div>
+
+                <h3 class="text-xl font-bold my-4 transition-colors duration-300">React Portfolio</h3>
+                <div class="tags">
+                    <span>React</span><span>Tailwind</span>
+                </div>
+                <p class="info">A personal portfolio website built with smooth animations and a clean design to showcase projects and skills effectively.</p>
+                <div class="share">
+                    <a href="#" target="_blank" rel="noopener noreferrer" aria-label="Portfolio GitHub Repository"><i class="fab fa-github fa-lg"></i></a>
+                    <a href="https://rubeshdevportfolio.netlify.app/" target="_blank" rel="noopener noreferrer" aria-label="Portfolio Live Demo"><i class="fa-solid fa-arrow-up-right-from-square fa-lg"></i></a>
+                </div>
+            </div>
+            <div class="custom-card project-card transform hover:-translate-y-2 transition-transform duration-300">
+                <div class="img w-full h-64 bg-cover bg-center" 
+     style="background-image: url('https://placehold.co/600x400/F9FAFB/2563EB?text=Profile+App'); 
+            opacity: 0.5;">
+</div>
+
+                <h3 class="text-xl font-bold my-4 transition-colors duration-300">Profile</h3>
+                <div class="tags">
+                    <span>HTML</span><span>Tailwind</span>
+                </div>
+                <p class="info">A personal portfolio website built with smooth animations and a clean design to showcase projects and skills effectively.</p>
+                <div class="share">
+                    <a href="#" target="_blank" rel="noopener noreferrer" aria-label="Portfolio GitHub Repository"><i class="fab fa-github fa-lg"></i></a>
+                    <a href="https://rubeshprofile.netlify.app/" target="_blank" rel="noopener noreferrer" aria-label="Portfolio Live Demo"><i class="fa-solid fa-arrow-up-right-from-square fa-lg"></i></a>
+                </div>
+            </div>
+            <div class="custom-card project-card transform hover:-translate-y-2 transition-transform duration-300">
+                <div class="img w-full h-64 bg-cover bg-center" 
+     style="background-image: url('https://placehold.co/600x400/F9FAFB/2563EB?text=Todo+App'); 
+            opacity: 0.5;">
+</div>
+
+                <h3 class="text-xl font-bold my-4 transition-colors duration-300">ToDo Application</h3>
+                <div class="tags">
+                    <span>HTML</span><span>Tailwind</span>
+                    <span>JavaScript</span>
+                </div>
+                <p class="info">A simple ToDo application built with HTML, CSS, and JavaScript to help users manage their tasks efficiently.</p>
+                <div class="share">
+                    <a href="#" target="_blank" rel="noopener noreferrer" aria-label="Portfolio GitHub Repository"><i class="fab fa-github fa-lg"></i></a>
+                    <a href="https://rubeshtodoapplication.netlify.app/" target="_blank" rel="noopener noreferrer" aria-label="Portfolio Live Demo"><i class="fa-solid fa-arrow-up-right-from-square fa-lg"></i></a>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</section>
+<section id="contact" class="py-24" style="background-color: var(--primary-color);">
+    <div class="container mx-auto px-6 max-w-6xl">
+        <h2 class="text-3xl font-bold mb-4 relative text-center" style="color: var(--text-color);">
+            <span style="color: var(--accent-color);" class="mr-2"></span> Get In Touch
+        </h2>
+        <p class="text-lg text-center mb-12" style="color: var(--text-secondary-color);">
+            My inbox is always open. Whether you have a question or just want to say hi, I’ll get back to you!
+        </p>
+
+        <!-- Main container for two-column layout -->
+        <div class="grid md:grid-cols-2 gap-12">
+
+            <!-- Column 1: Contact Form -->
+            <div class="p-8 rounded-lg shadow-lg" style="background-color: var(--bg-color);">
+                <form action="#" method="POST">
+                    <div class="mb-6">
+                        <label for="name" class="block mb-2 font-medium" style="color: var(--text-secondary-color);">Your Name</label>
+                        <input type="text" id="name" name="name" class="w-full p-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition" style="background-color: var(--primary-color); color: var(--text-color);" placeholder="John Doe" required>
+                    </div>
+                    <div class="mb-6">
+                        <label for="email" class="block mb-2 font-medium" style="color: var(--text-secondary-color);">Your Email</label>
+                        <input type="email" id="email" name="email" class="w-full p-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition" style="background-color: var(--primary-color); color: var(--text-color);" placeholder="john.doe@example.com" required>
+                    </div>
+                    <div class="mb-6">
+                        <label for="message" class="block mb-2 font-medium" style="color: var(--text-secondary-color);">Message</label>
+                        <textarea id="message" name="message" rows="5" class="w-full p-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition" style="background-color: var(--primary-color); color: var(--text-color);" placeholder="Your message here..." required></textarea>
+                    </div>
+                    <button type="submit" class="interactive-button w-full px-8 py-3 border rounded-md font-medium text-[var(--accent-color)] border-[var(--accent-color)] hover:bg-blue-600 hover:text-white transition duration-300">
+                        Send Message
+                    </button>
+                </form>
+            </div>
+
+            <!-- Column 2: Contact Information -->
+            <div class="flex flex-col justify-center text-center md:text-left">
+                <h3 class="text-2xl font-bold mb-6" style="color: var(--text-color);">Let's Connect</h3>
+                
+                <div class="flex items-center justify-center md:justify-start gap-4 mb-6">
+                    <i class="fas fa-envelope text-2xl" style="color: var(--accent-color);"></i>
+                    <a href="mailto:rubeshsankar2006@gmail.com" class="text-lg hover:underline" style="color: var(--text-secondary-color);">rubeshsankar2006@gmail.com</a>
+                </div>
+
+                <div class="flex items-center justify-center md:justify-start gap-4 mb-6">
+                    <i class="fab fa-linkedin text-2xl" style="color: var(--accent-color);"></i>
+                    <a href="https://www.linkedin.com/in/rubesh-s-8400112a5/" target="_blank" class="text-lg hover:underline" style="color: var(--text-secondary-color);">LinkedIn</a>
+                </div>
+
+                <div class="flex items-center justify-center md:justify-start gap-4 mb-6">
+                    <i class="fab fa-github text-2xl" style="color: var(--accent-color);"></i>
+                    <a href="https://github.com/Rubesh2596" target="_blank" class="text-lg hover:underline" style="color: var(--text-secondary-color);">GitHub</a>
+                </div>
+                
+                <p class="mt-4" style="color: var(--text-secondary-color);">
+                    Based in India <br>
+                    Available for freelance and full-time opportunities.
+                </p>
+            </div>
+
+        </div>
+    </div>
+</section>
+    </main>
+
+    <footer class="py-8">
+        <div class="container mx-auto px-6 flex flex-col items-center justify-center">
+            <div class="flex space-x-6 mb-4">
+  <a href="https://github.com/Rubesh2596" target="_blank" rel="noopener noreferrer"
+     class="transition-all duration-300 text-[var(--text-secondary-color)] hover:text-[var(--accent-color)]">
+    <i class="fab fa-github fa-lg"></i>
+  </a>
+  <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer"
+     class="transition-all duration-300 text-[var(--text-secondary-color)] hover:text-[var(--accent-color)]">
+    <i class="fab fa-email fa-lg"></i>
+  </a>
+</div>
+
+            <p class="text-sm" style="color: var(--text-secondary-color);">Built by Rubesh.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- Intersection Observer for scroll animations ---
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('section-visible');
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll('.section-hidden').forEach(section => {
+                observer.observe(section);
+            });
+
+            // --- Scroll Spy for active nav link ---
+            const sections = document.querySelectorAll('section[id]');
+            const navLinks = document.querySelectorAll('nav a.nav-link');
+            
+            const activateNavLink = (id) => {
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if(link.getAttribute('href') === `#${id}`) {
+                        link.classList.add('active');
+                    }
+                });
+            };
+
+            const scrollSpyObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        activateNavLink(entry.target.id);
+                    }
+                });
+            }, { rootMargin: '-30% 0px -70% 0px' }); 
+
+            sections.forEach(section => {
+                scrollSpyObserver.observe(section);
+            });
+            
+            // --- Header background change on scroll ---
+            const header = document.getElementById('header');
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 50) {
+                    header.style.backgroundColor = 'var(--header-bg-color)';
+                    header.style.backdropFilter = 'blur(8px)';
+                    header.style.boxShadow = '0 4px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -1px rgba(0, 0, 0, 0.1)';
+                } else {
+                    header.style.backgroundColor = 'transparent';
+                    header.style.backdropFilter = 'none';
+                    header.style.boxShadow = 'none';
+                }
+            });
+
+            // --- Mobile Menu Toggle ---
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const mobileLinks = mobileMenu.querySelectorAll('a');
+
+            mobileMenuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+            
+            mobileLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    mobileMenu.classList.add('hidden');
+                });
+            });
+        });
+    </script>
+</body>
+</html>
